@@ -1,0 +1,53 @@
+version: "3.9"
+services:
+    peneliti_dua_db:
+        container_name: peneliti_dua_db
+        image: mysql:8.0
+        restart: always
+        command: --default-authentication-plugin=mysql_native_password
+        volumes:
+            - db_peneliti_dua_volume:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: praktcc
+            MYSQL_DATABASE: data_peneliti_dua
+            MYSQL_USER: isna
+            MYSQL_PASSWORD: isna
+        networks:
+            - app_network
+        ports:
+            - "3301:3306"
+
+    peneliti_satu_db:
+        container_name: peneliti_satu_db    
+        image: mysql:8.0
+        restart: always
+        command: --default-authentication-plugin=mysql_native_password
+        volumes:
+            - db_peneliti_satu_volume:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: praktcc
+            MYSQL_DATABASE: data_peneliti_satu
+            MYSQL_USER: isna
+            MYSQL_PASSWORD: isna
+        networks:
+            - app_network
+        ports:
+            - "3302:3306"
+
+    peneliti_bantul_app:
+        container_name: peneliti_bantul_app
+        build: .
+        restart: always
+        depends_on:
+            - db_peneliti_du            - db_peneliti_satu
+        networks:
+            - app_network
+        ports:
+            - "8090:80"
+
+networks:
+    app_network:
+
+volumes:
+    db_peneliti_dua_volume:
+    db_peneliti_satu_volume:
